@@ -8,6 +8,7 @@ public class ballSpawner : MonoBehaviour
     [SerializeField] float _launchForce = 5;
     GameObject hold;
     float sentry = 0;
+    int number = 0;
     // Start is called before the first frame update
     void Start()
     {
@@ -30,7 +31,10 @@ public class ballSpawner : MonoBehaviour
             Debug.Log(Mathf.Cos(ntan));
             Debug.Log(Mathf.Sin(ntan));
             hold.GetComponent<Ball>().push(Mathf.Cos(ntan) * _launchForce, Mathf.Sin(ntan) * _launchForce);
+            hold.GetComponent<Ball>().setId(number);
+            number++;
             sentry = 2;
+            GameState.health--;
         }
 
         if (sentry > 0) { sentry -= Time.deltaTime; }

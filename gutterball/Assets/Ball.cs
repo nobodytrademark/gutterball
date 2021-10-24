@@ -6,13 +6,12 @@ using System;
 public class Ball : MonoBehaviour
 {
     [SerializeField] int value = 0;
-    [SerializeField] double timestamp; /* Fallback for calculating which to kill */
+    int id;
 
     // Start is called before the first frame update
     void Start()
     {
         //push(5.0f, 5.0f);
-        timestamp = UnityEngine.Time.realtimeSinceStartup;
     }
 
     // Update is called once per frame
@@ -20,6 +19,8 @@ public class Ball : MonoBehaviour
     {
         
     }
+
+    public void setId(int i) { id = i; }
 
     public void push(float x, float y)
     {
@@ -32,9 +33,8 @@ public class Ball : MonoBehaviour
         {
             float a = (float)Math.Sqrt(Math.Pow((double)col.gameObject.GetComponent<Rigidbody2D>().velocity.x, 2) + Math.Pow((double)col.gameObject.GetComponent<Rigidbody2D>().velocity.y, 2));
             float b = (float)Math.Sqrt(Math.Pow((double)GetComponent<Rigidbody2D>().velocity.x, 2) + Math.Pow((double)GetComponent<Rigidbody2D>().velocity.y, 2));
-            Debug.Log(a);
-            Debug.Log(b);
-            if (a == b && col.gameObject.GetComponent<Ball>().timestamp > timestamp) /* Ensure velocities are not the same */
+            Debug.Log("I am getting a colission!");
+            if (a == b && col.gameObject.GetComponent<Ball>().id > id) /* Ensure velocities are not the same */
             {
                 Destroy(this.gameObject);
             }
@@ -45,6 +45,10 @@ public class Ball : MonoBehaviour
             else
             {
                 value++;
+                GetComponent<SpriteRenderer>().color = ColorPool.getColor(value);
+                GameState.points += value;
+                GameState.health++;
+                Destroy(col.gameObject);
             }
         }
     }
