@@ -47,7 +47,7 @@ public class Ball : MonoBehaviour
                 value++;
                 GetComponent<SpriteRenderer>().color = ColorPool.getColor(value);
                 GameState.points += value;
-                GameState.health++;
+                GameState.alterHealth(1);
                 Destroy(col.gameObject);
             }
         }

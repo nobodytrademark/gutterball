@@ -7,6 +7,7 @@ public class GameState : MonoBehaviour
 {
     [SerializeField] GameObject healthbar;
     [SerializeField] GameObject pointstext;
+    [SerializeField] int winCondition = 100;
     public static int points = 0;
     public static int health = 15;
 
@@ -23,5 +24,26 @@ public class GameState : MonoBehaviour
         string healthstring = "";
         for(int i = 0; i < health; i++) { healthstring += "█"; }
         healthbar.GetComponent<Text>().text = healthstring;
+
+        if (points > winCondition)
+        {
+            victory();
+        }
+    }
+
+    public static void alterHealth(int i)
+    {
+        health += i;
+        if (health < 1) { health = 0; gameover(); }
+    }
+
+    private static void gameover()
+    {
+        Time.timeScale = 0;
+    }
+
+    private static void victory()
+    {
+        Time.timeScale = 0;
     }
 }
