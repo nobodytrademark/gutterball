@@ -14,7 +14,10 @@ public class GameState : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        points = 0;
+        health = 15;
+        EndScreen.activate = false;
+        Time.timeScale = 1;
     }
 
     // Update is called once per frame
@@ -40,10 +43,14 @@ public class GameState : MonoBehaviour
     private static void gameover()
     {
         Time.timeScale = 0;
+        EndScreen.activate = true;
+        EndScreen.text = "Game Over.";
     }
 
     private static void victory()
     {
         Time.timeScale = 0;
+        EndScreen.activate = true;
+        EndScreen.text = "Victory.";
     }
 }
