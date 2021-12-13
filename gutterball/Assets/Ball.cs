@@ -5,13 +5,15 @@ using System;
 
 public class Ball : MonoBehaviour
 {
-    [SerializeField] int value = 0;
+    [SerializeField] public int value = 1;
+    [SerializeField] float vol = .5f;
+    [SerializeField] public AudioClip woosh;
     int id;
 
     // Start is called before the first frame update
     void Start()
     {
-        //push(5.0f, 5.0f);
+        GetComponent<SpriteRenderer>().color = ColorPool.getColor(value);
     }
 
     // Update is called once per frame
@@ -29,26 +31,35 @@ public class Ball : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D col)
     {
-        if (col.gameObject.GetComponent<Ball>() is Ball && col.gameObject.GetComponent<Ball>().value == this.value)
+        AudioSource aud = GetComponent<AudioSource>();
+        if (col.gameObject.GetComponent<Ball>() is Ball)
         {
-            float a = (float)Math.Sqrt(Math.Pow((double)col.gameObject.GetComponent<Rigidbody2D>().velocity.x, 2) + Math.Pow((double)col.gameObject.GetComponent<Rigidbody2D>().velocity.y, 2));
-            float b = (float)Math.Sqrt(Math.Pow((double)GetComponent<Rigidbody2D>().velocity.x, 2) + Math.Pow((double)GetComponent<Rigidbody2D>().velocity.y, 2));
-            Debug.Log("I am getting a colission!");
-            if (a == b && col.gameObject.GetComponent<Ball>().id > id) /* Ensure velocities are not the same */
+            if (col.gameObject.GetComponent<Ball>().value == this.value) 
             {
-                Destroy(this.gameObject);
-            }
-            else if (a > b) /* If there are different velocities then  */
-            {
-                Destroy(this.gameObject);
+                float a = (float)Math.Sqrt(Math.Pow((double)col.gameObject.GetComponent<Rigidbody2D>().velocity.x, 2) + Math.Pow((double)col.gameObject.GetComponent<Rigidbody2D>().velocity.y, 2));
+                float b = (float)Math.Sqrt(Math.Pow((double)GetComponent<Rigidbody2D>().velocity.x, 2) + Math.Pow((double)GetComponent<Rigidbody2D>().velocity.y, 2));
+                Debug.Log("I am getting a colission!");
+                if (a == b && col.gameObject.GetComponent<Ball>().id > id) /* Ensure velocities are not the same */
+                {
+                    Destroy(this.gameObject);
+                }
+                else if (a > b) /* If there are different velocities then  */
+                {
+                    Destroy(this.gameObject);
+                }
+                else
+                {
+                    value++;
+                    GetComponent<SpriteRenderer>().color = ColorPool.getColor(value);
+                    GameState.points += value;
+                    GameState.alterHealth(1);
+                    Destroy(col.gameObject);
+                }
+                aud.PlayOneShot(woosh, vol);
             }
             else
             {
-                value++;
-                GetComponent<SpriteRenderer>().color = ColorPool.getColor(value);
-                GameState.points += value;
-                GameState.alterHealth(1);
-                Destroy(col.gameObject);
+                aud.PlayOneShot(aud.clip, .2f);
             }
         }
     }
